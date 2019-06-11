@@ -29,30 +29,23 @@ android {
 }
 
 project.ext {
-    dagger_version = "2.16"
-    retrofit_version = "2.3.0"
-    room_version = "2.1.0-alpha02"
+    dagger_version = "2.21"
+    retrofit_version = "2.5.0"
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    testImplementation "androidx.room:room-testing:$room_version"
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     //Dagger2
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
-
-    //Room
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-rxjava2:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     //Remote
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
