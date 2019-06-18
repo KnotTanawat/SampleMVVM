@@ -28,6 +28,6 @@ public class KnotApp extends Application {
 
         appComponent.inject(this);
 
-        
+
     }
 }
