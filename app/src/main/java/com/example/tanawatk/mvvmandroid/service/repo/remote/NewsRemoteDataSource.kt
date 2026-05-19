@@ -3,12 +3,13 @@ package com.example.tanawatk.mvvmandroid.service.repo.remote
 import com.example.tanawatk.mvvmandroid.common.Result
 import com.example.tanawatk.mvvmandroid.service.ServiceApi
 import com.example.tanawatk.mvvmandroid.service.model.ResponseModel
-import com.example.tanawatk.mvvmandroid.service.repo.NewsDataSource
+import com.example.tanawatk.mvvmandroid.service.repo.RemoteDataSource
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class NewsRemoteDataSource @Inject constructor(
     private val serviceApi: ServiceApi
-) : NewsDataSource {
+) : RemoteDataSource {
 
     override suspend fun fetchRemote(): Result<ResponseModel> = try {
         val response = serviceApi.getNews()
@@ -17,13 +18,9 @@ class NewsRemoteDataSource @Inject constructor(
         } else {
             Result.Error(response.code(), response.message())
         }
+    } catch (e: CancellationException) {
+        throw e  // never swallow coroutine cancellation
     } catch (e: Exception) {
         Result.Error(0, e.message ?: "Network error")
     }
-
-    override suspend fun loadFromCache(): Result<ResponseModel> =
-        Result.Error(0, "Not a cache source")
-
-    override suspend fun saveToCache(model: ResponseModel) = Unit
-    override suspend fun clearCache() = Unit
 }

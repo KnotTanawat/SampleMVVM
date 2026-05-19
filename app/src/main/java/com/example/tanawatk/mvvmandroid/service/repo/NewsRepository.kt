@@ -9,18 +9,17 @@ import javax.inject.Singleton
 
 @Singleton
 class NewsRepository @Inject constructor(
-    private val remote: NewsRemoteDataSource,
-    private val local: NewsLocalDataSource
+    private val remote: RemoteDataSource,
+    private val local: LocalDataSource
 ) {
-    /** Cache-first: return local data if available, otherwise fetch from network and cache it. */
+    /** Cache-first: serve Room data if available, otherwise fetch from network and persist. */
     suspend fun getNews(): Result<ResponseModel> {
         val cached = local.loadFromCache()
         if (cached is Result.Success) return cached
 
         return when (val result = remote.fetchRemote()) {
             is Result.Success -> {
-                local.clearCache()
-                local.saveToCache(result.data)
+                local.replaceCache(result.data)
                 result
             }
             is Result.Error -> result

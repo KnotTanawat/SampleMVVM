@@ -28,7 +28,10 @@ class NewsAdapter : ListAdapter<News, NewsAdapter.NewsViewHolder>(DIFF) {
 
     companion object {
         private val DIFF = object : DiffUtil.ItemCallback<News>() {
-            override fun areItemsTheSame(oldItem: News, newItem: News) = oldItem.url == newItem.url
+            // Treat null URL as never matching — avoids false equality between stubs
+            override fun areItemsTheSame(oldItem: News, newItem: News) =
+                oldItem.url != null && oldItem.url == newItem.url
+
             override fun areContentsTheSame(oldItem: News, newItem: News) = oldItem == newItem
         }
     }

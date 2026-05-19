@@ -5,15 +5,12 @@ import com.example.tanawatk.mvvmandroid.service.db.NewsDao
 import com.example.tanawatk.mvvmandroid.service.db.NewsEntity
 import com.example.tanawatk.mvvmandroid.service.model.News
 import com.example.tanawatk.mvvmandroid.service.model.ResponseModel
-import com.example.tanawatk.mvvmandroid.service.repo.NewsDataSource
+import com.example.tanawatk.mvvmandroid.service.repo.LocalDataSource
 import javax.inject.Inject
 
 class NewsLocalDataSource @Inject constructor(
     private val newsDao: NewsDao
-) : NewsDataSource {
-
-    override suspend fun fetchRemote(): Result<ResponseModel> =
-        Result.Error(0, "Not a remote source")
+) : LocalDataSource {
 
     override suspend fun loadFromCache(): Result<ResponseModel> {
         val entities = newsDao.getAll()
@@ -24,12 +21,10 @@ class NewsLocalDataSource @Inject constructor(
         }
     }
 
-    override suspend fun saveToCache(model: ResponseModel) {
+    override suspend fun replaceCache(model: ResponseModel) {
         val entities = model.articles?.map { it.toEntity() } ?: return
-        newsDao.insertAll(entities)
+        newsDao.replaceAll(entities)  // single @Transaction — no gap between clear and insert
     }
-
-    override suspend fun clearCache() = newsDao.deleteAll()
 
     private fun NewsEntity.toNews() = News(
         url = url, title = title, date = date,
